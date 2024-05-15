@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
@@ -27,10 +28,13 @@ namespace api_bank.Controller
         [Route(template: "Ativos")]
         public async Task<IActionResult> GetAtivosAsync()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             List<Ativo> ativos = await _context
                .Ativos
                .AsNoTracking()
                .ToListAsync();
+            stopwatch.Stop(); // 231 ms
+
             return Ok(ativos);
         }
 
@@ -38,10 +42,12 @@ namespace api_bank.Controller
         [Route(template: "Ativos/{id}")]
         public async Task<IActionResult> GetAtivosByIdAsync([FromRoute] int id)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Ativo ativos = await _context
                .Ativos
                .AsNoTracking()
                .FirstOrDefaultAsync(x => x.AtivoId == id);
+            stopwatch.Stop();
 
             return ativos == null ? NotFound() : Ok(ativos);
         }
@@ -62,8 +68,10 @@ namespace api_bank.Controller
 
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
                 await _context.Ativos.AddAsync(_ativo);
                 await _context.SaveChangesAsync();
+                stopwatch.Stop();
                 return Created(uri: $"v1/Ativos/{_ativo.AtivoId}", _ativo);
             }
             catch (Exception ex)
@@ -81,18 +89,23 @@ namespace api_bank.Controller
                 return BadRequest();
             }
 
+            Stopwatch stopwatch = Stopwatch.StartNew();
             var _ativo = await _context.Ativos.FirstOrDefaultAsync(x => x.AtivoId == id);
+            stopwatch.Stop();
 
             if (_ativo == null)
                 return BadRequest();
+
 
             try
             {
                 _ativo.AtivoName = body.AtivoName;
                 _ativo.Preco = body.Preco;
 
+                Stopwatch _stopwatch = Stopwatch.StartNew();
                 _context.Ativos.Update(_ativo);
                 await _context.SaveChangesAsync();
+                _stopwatch.Stop();
                 return Ok(_ativo);
             }
             catch (Exception ex)
