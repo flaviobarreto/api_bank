@@ -17,6 +17,8 @@ namespace api_bank
         {
             services.AddControllers();
             services.AddDbContext<AppDbContext>();
+            services.AddSwaggerGen();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -24,16 +26,23 @@ namespace api_bank
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
             }
+            app.UseSwagger();
+                app.UseSwaggerUI();
 
             app.UseRouting();
 
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id}");
-               
+                endpoints.MapControllers();
+                endpoints.MapSwagger();     // add this line
+                endpoints.MapFallbackToFile("index.html");
+
             });
         }
     }
