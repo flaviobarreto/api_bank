@@ -24,7 +24,7 @@ namespace api_bank.Controller
         }
 
         [HttpGet]
-        [Route(template: "ativos")]
+        [Route(template: "Ativos")]
         public async Task<IActionResult> GetAtivosAsync()
         {
             List<Ativo> ativos = await _context
@@ -35,7 +35,7 @@ namespace api_bank.Controller
         }
 
         [HttpGet]
-        [Route(template: "ativos/{id}")]
+        [Route(template: "Ativos/{id}")]
         public async Task<IActionResult> GetAtivosByIdAsync([FromRoute] int id)
         {
             Ativo ativos = await _context
