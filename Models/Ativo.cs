@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace api_bank.Models
 {
@@ -9,5 +10,6 @@ namespace api_bank.Models
         public string AtivoName { get; set; }
         [Required]
         public double Preco {get; set; }
+        public List<Cliente> clientes { get; set; }
     }
 }
